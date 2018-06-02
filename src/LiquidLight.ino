@@ -12,6 +12,7 @@ void setup() {
   initSerial();
   #endif
 
+  irrecv.enableIRIn(); // Start the receiver
 
   initLEDStrip();
 
@@ -67,6 +68,58 @@ void LEDStripFullOff()
 
 
 
+void getInput() {
+
+  if (irrecv.decode(&results)) {
+
+    unsigned long command; //stores the latest input command
+
+    command = results.value;
+
+    //Serial.println(results.value, HEX);
+    //Serial.println(results.value);
+
+    switch (command) {
+      case 2011249228:  //CENTER
+        Serial.println("center");
+        //displayAnimation();
+      break;
+
+      case 2011254860: // TOP
+        Serial.println("top");
+        break;
+
+      case 2011258956: // RIGHT
+        Serial.println("right");
+        break;
+
+      case 2011271244: // LEFT
+        Serial.println("left");
+        break;
+
+      case 2011246668: // BOTTOM
+        Serial.println("bottom");
+        break;
+
+      case 2011283532: // MENU
+        Serial.println("menu");
+        break;
+
+      case 2011298380: // PLAY
+        Serial.println("play");
+        break;
+
+      default:
+        //Serial.println(command);
+        break;
+    }
+
+    irrecv.resume(); // Receive the next value
+  }
+
+
+}
+
 
 
 /*//////////////////////////////////////////////////////////////////////////////////
@@ -75,5 +128,6 @@ void LEDStripFullOff()
 void loop()
 {
   // does nothing
+  getInput();
 
 }
