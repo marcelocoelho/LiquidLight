@@ -52,7 +52,7 @@ CRGB leds[LEDS_NUM];
 
 // Debug LED
 ///////////////////////////////////////////////////////////////////////////////////
-#define DEBUG_LED		13
+#define DEBUG_LED		A0 //13
 #define DEBUG_ENABLED
 
 //#define debug(a)                      // enable this one if debug is off

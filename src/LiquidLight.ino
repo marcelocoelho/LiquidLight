@@ -165,7 +165,7 @@ void getInput() {
 
     switch (command) {
       case 2011249228:  //CENTER
-        Serial.println("center");
+        Serial.println("center1");
         globalState = PLAYING;
         //displayAnimation();
       break;
