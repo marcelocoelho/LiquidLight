@@ -44,8 +44,14 @@ decode_results results;
 #define LEDS_BRIGHTNESS_4   255
 #define FRAMES_PER_SECOND 60
 
-int leds_brightness;
-int eeprom_addr_brightness = 0x00;
+
+#define BRIGHT_MAX  160
+#define BRIGHT_MIN  0
+#define DOWN -5
+#define UP    5
+
+int leds_brightness = BRIGHT_MAX;
+//int eeprom_addr_brightness = 0x00; //0x00;
 CRGB leds[LEDS_NUM];
 
 

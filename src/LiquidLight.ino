@@ -7,6 +7,8 @@
 
 void setup() {
 
+  globalState = WAITING;
+
   initDebugLED();
 
   #ifdef DEBUG_ENABLED
@@ -126,7 +128,7 @@ void initLEDStrip()
   FastLED.addLeds<APA102, LEDS_DATA, LEDS_CLOCK, BGR>(leds, LEDS_NUM);
   //leds_brightness = EEPROM.read(eeprom_addr_brightness);
   //if (leds_brightness == 0x00) leds_brightness = LEDS_BRIGHTNESS_4;
-	//FastLED.setBrightness( leds_brightness );
+	FastLED.setBrightness( leds_brightness );
 	LEDStripFullOff();
 }
 
@@ -165,7 +167,7 @@ void getInput() {
 
     switch (command) {
       case 2011249228:  //CENTER
-        Serial.println("center1");
+        Serial.println("center");
         globalState = PLAYING;
         //displayAnimation();
       break;
@@ -176,10 +178,12 @@ void getInput() {
 
       case 2011258956: // RIGHT
         Serial.println("right");
+        changeBrightness(UP);
         break;
 
       case 2011271244: // LEFT
         Serial.println("left");
+        changeBrightness(DOWN);
         break;
 
       case 2011246668: // BOTTOM
@@ -217,6 +221,8 @@ int slower = 0; // weird hack to slow down animation by skipping frames
 
 void setDisplay() {
 
+
+
   slower++;
 
   if (globalState == PLAYING && slower > 100) {
@@ -239,24 +245,26 @@ void setDisplay() {
     slower = 0;
   }
 
-
-  /*
-  if (globalState == PLAYING) {
-
-    int gotData = 0;
-
-    gotData = myFile.read(buf, sizeof(buf));      // grabs one line at a time from memory card
-    if (gotData != 0) {
-      displayLine();
-    } else {
-      globalState = WAITING;
-      //myFile.seek(0);
-      myFile.close();
-    }
-  }
-  */
 }
 
+
+void changeBrightness(int _value) {
+
+  leds_brightness = leds_brightness + _value;     // set new value
+
+
+  if (leds_brightness >= BRIGHT_MAX)
+    leds_brightness = BRIGHT_MAX;
+
+  if (leds_brightness <= BRIGHT_MIN)
+    leds_brightness = BRIGHT_MIN;
+
+  Serial.println(leds_brightness);
+
+  FastLED.setBrightness( leds_brightness );     // display
+  FastLED.show();
+
+}
 
 
 
