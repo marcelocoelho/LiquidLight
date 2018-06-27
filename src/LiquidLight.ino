@@ -378,9 +378,9 @@ void changeBrightness(int _value) {
 
 }
 
-void playAnimation() {
-  
-}
+
+
+
 
 
 
