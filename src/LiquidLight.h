@@ -3,7 +3,7 @@
 // State machine and display settings
 ///////////////////////////////////////////////////////////////////////////////////
 enum State {
-   WAITING,
+   ON,
    PLAYING,
    DEBUG,
    WAKEUP,
@@ -11,7 +11,7 @@ enum State {
    INSLEEP
 };
 
-int globalState = WAITING;
+int globalState = INSLEEP;
 
 enum InputCommands {
   CLEAR,
@@ -51,8 +51,8 @@ decode_results results;
 // LED Strip
 ///////////////////////////////////////////////////////////////////////////////////
 #include <FastLED.h>
-#define LEDS_NUM          14
-#define LEDS_NUM_MIDDLE   7
+#define LEDS_NUM          18
+#define LEDS_NUM_MIDDLE   9
 
 #define LEDS_DATA         5
 #define LEDS_CLOCK        4

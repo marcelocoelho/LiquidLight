@@ -246,7 +246,7 @@ void setDisplay() {
   // Now go work on states
   /////////////////////////////////////////////////////
   switch(globalState) {
-    case WAITING:
+    case ON:
 
       if (inputCommand == CENTER) {
         inputCommand = CLEAR;
@@ -271,6 +271,7 @@ void setDisplay() {
         inputCommand = CLEAR;
         globalState = WAKEUP;
       }
+      break;
 
     case PLAYING:
       playing();
@@ -301,7 +302,7 @@ void playing() {
 
       if(positionCounter >= LEDS_NUM - 1) {
         positionCounter = 0;
-        globalState = WAITING;
+        globalState = ON;
       }
 
       FastLED.show();
@@ -324,7 +325,7 @@ void wakeup() {
 
     if(positionCounter >= LEDS_NUM_MIDDLE - 1) {
       positionCounter = 0;
-      globalState = WAITING;
+      globalState = ON;
     }
 
     FastLED.show();
@@ -340,11 +341,13 @@ void sleep() {
 
   if (slower > 5) {
 
-    leds[LEDS_NUM_MIDDLE + positionCounter] =  CRGB(0);
-    leds[LEDS_NUM_MIDDLE - positionCounter] =  CRGB(0);
+    Serial.println(positionCounter);
+
+    leds[positionCounter] =  CRGB(0);
+    leds[LEDS_NUM - positionCounter] =  CRGB(0);
     positionCounter++;
 
-    if(positionCounter >= LEDS_NUM_MIDDLE - 1) {
+    if(positionCounter > LEDS_NUM_MIDDLE) {
       positionCounter = 0;
       globalState = INSLEEP;
     }
@@ -375,7 +378,9 @@ void changeBrightness(int _value) {
 
 }
 
-
+void playAnimation() {
+  
+}
 
 
 
