@@ -243,16 +243,16 @@ void setDisplay() {
   }
 
 
+
   // Now go work on states
   /////////////////////////////////////////////////////
   switch(globalState) {
     case ON:
 
-      if (inputCommand == CENTER) {
+      if (inputCommand == CENTER) {   // check if it's a command to turn it off, if yes go do it and ignore all else
         inputCommand = CLEAR;
         globalState = SLEEP;
       }
-
 
       break;
 
@@ -274,7 +274,7 @@ void setDisplay() {
       break;
 
     case PLAYING:
-      playing();
+      //playing();
       break;
 
     default:
@@ -287,6 +287,9 @@ void setDisplay() {
 /*//////////////////////////////////////////////////////////////////////////////////
     FUNCTIONS FOR DIFFERENT STATES
 //////////////////////////////////////////////////////////////////////////////////*/
+
+
+
 void playing() {
 
     slower++;
@@ -335,6 +338,9 @@ void wakeup() {
 }
 
 
+
+
+
 void sleep() {
 
   slower++;
@@ -377,9 +383,6 @@ void changeBrightness(int _value) {
   FastLED.show();
 
 }
-
-
-
 
 
 

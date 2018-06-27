@@ -68,10 +68,21 @@ decode_results results;
 #define DOWN -5
 #define UP    5
 
+//#define BIGGER    1
+//#define SMALLER  -1
+
 int leds_brightness = 40;
 //int eeprom_addr_brightness = 0x00; //0x00;
 CRGB leds[LEDS_NUM];
 
+
+/*
+#define ADVANCE 1
+#define RETURN -1
+#define SCENEMAX 3
+
+int sceneNum = 0;
+*/
 
 
 // Debug LED
