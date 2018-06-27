@@ -5,10 +5,27 @@
 enum State {
    WAITING,
    PLAYING,
-   DEBUG
+   DEBUG,
+   WAKEUP,
+   SLEEP,
+   INSLEEP
 };
 
 int globalState = WAITING;
+
+enum InputCommands {
+  CLEAR,
+  CENTER,
+  RIGHT,
+  LEFT,
+  TOP,
+  DOWN,
+  MENU,
+  PLAY
+};
+
+int inputCommand = CLEAR;
+
 
 volatile unsigned char displayFramerateDivider;
 
@@ -34,7 +51,8 @@ decode_results results;
 // LED Strip
 ///////////////////////////////////////////////////////////////////////////////////
 #include <FastLED.h>
-#define LEDS_NUM          10
+#define LEDS_NUM          14
+#define LEDS_NUM_MIDDLE   7
 
 #define LEDS_DATA         5
 #define LEDS_CLOCK        4
@@ -50,7 +68,7 @@ decode_results results;
 #define DOWN -5
 #define UP    5
 
-int leds_brightness = BRIGHT_MAX;
+int leds_brightness = 40;
 //int eeprom_addr_brightness = 0x00; //0x00;
 CRGB leds[LEDS_NUM];
 

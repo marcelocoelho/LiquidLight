@@ -7,8 +7,6 @@
 
 void setup() {
 
-  globalState = WAITING;
-
   initDebugLED();
 
   #ifdef DEBUG_ENABLED
@@ -18,6 +16,8 @@ void setup() {
   irrecv.enableIRIn(); // Start the receiver
 
   initLEDStrip();
+
+  globalState = WAKEUP;
 
   displayStartFrameInterrupt();
 
@@ -153,7 +153,10 @@ void LEDStripFullOff()
 }
 
 
-
+/*//////////////////////////////////////////////////////////////////////////////////
+    GET INPUT
+    This runs as much as possible so we don't lose remote input
+//////////////////////////////////////////////////////////////////////////////////*/
 void getInput() {
 
   if (irrecv.decode(&results)) {
@@ -168,34 +171,40 @@ void getInput() {
     switch (command) {
       case 2011249228:  //CENTER
         Serial.println("center");
-        globalState = PLAYING;
-        //displayAnimation();
+        inputCommand = CENTER;
       break;
 
       case 2011254860: // TOP
-        Serial.println("top");
+        Serial.println("up");
+        inputCommand = UP;
         break;
 
       case 2011258956: // RIGHT
         Serial.println("right");
-        changeBrightness(UP);
+        inputCommand = RIGHT;
+        //changeBrightness(UP);
         break;
 
       case 2011271244: // LEFT
         Serial.println("left");
-        changeBrightness(DOWN);
+        inputCommand = LEFT;
+        //changeBrightness(DOWN);
         break;
 
       case 2011246668: // BOTTOM
-        Serial.println("bottom");
+        Serial.println("down");
+        inputCommand = DOWN;
         break;
 
       case 2011283532: // MENU
         Serial.println("menu");
+        inputCommand = MENU;
+        //globalState = PLAYING;
         break;
 
       case 2011298380: // PLAY
         Serial.println("play");
+        inputCommand = PLAY;
         break;
 
       default:
@@ -213,7 +222,7 @@ void getInput() {
 
 /*//////////////////////////////////////////////////////////////////////////////////
     DISPLAY LOGIC
-
+    This decides what to do with input: change state, change properties, etc
 //////////////////////////////////////////////////////////////////////////////////*/
 
 int positionCounter = 0;
@@ -221,21 +230,99 @@ int slower = 0; // weird hack to slow down animation by skipping frames
 
 void setDisplay() {
 
+  // regardless of state, adjust brigthness when needed
+  /////////////////////////////////////////////////////
+  if (inputCommand == UP) {
+    inputCommand = CLEAR;
+    changeBrightness(UP);
+  }
 
+  if (inputCommand == DOWN) {
+    inputCommand = CLEAR;
+    changeBrightness(DOWN);
+  }
+
+
+  // Now go work on states
+  /////////////////////////////////////////////////////
+  switch(globalState) {
+    case WAITING:
+
+      if (inputCommand == CENTER) {
+        inputCommand = CLEAR;
+        globalState = SLEEP;
+      }
+
+
+      break;
+
+    case WAKEUP:
+      wakeup();
+      break;
+
+    case SLEEP:
+      sleep();
+      break;
+
+    case INSLEEP:
+      // do nothing, mostly
+
+      if (inputCommand == CENTER) {
+        inputCommand = CLEAR;
+        globalState = WAKEUP;
+      }
+
+    case PLAYING:
+      playing();
+      break;
+
+    default:
+      break;
+
+  }
+}
+
+
+/*//////////////////////////////////////////////////////////////////////////////////
+    FUNCTIONS FOR DIFFERENT STATES
+//////////////////////////////////////////////////////////////////////////////////*/
+void playing() {
+
+    slower++;
+
+    if (slower > 100) {
+
+      for (int i = 0; i < LEDS_NUM; i++) {    //clear strip
+        leds[i] =  CRGB(0);
+      }
+
+      leds[positionCounter] =  CRGB(255);
+      positionCounter++;
+
+      if(positionCounter >= LEDS_NUM - 1) {
+        positionCounter = 0;
+        globalState = WAITING;
+      }
+
+      FastLED.show();
+
+      slower = 0;
+    }
+}
+
+
+
+void wakeup() {
 
   slower++;
 
-  if (globalState == PLAYING && slower > 100) {
+  if (slower > 5) {
 
-    for (int i = 0; i < LEDS_NUM; i++) {    //clear strip
-      leds[i] =  CRGB(0);
-    }
-
-
-    leds[positionCounter] =  CRGB(255);
+    leds[LEDS_NUM_MIDDLE + positionCounter] =  CRGB(255);
+    leds[LEDS_NUM_MIDDLE - positionCounter] =  CRGB(255);
     positionCounter++;
 
-    if(positionCounter >= LEDS_NUM - 1) {
+    if(positionCounter >= LEDS_NUM_MIDDLE - 1) {
       positionCounter = 0;
       globalState = WAITING;
     }
@@ -244,8 +331,30 @@ void setDisplay() {
 
     slower = 0;
   }
-
 }
+
+
+void sleep() {
+
+  slower++;
+
+  if (slower > 5) {
+
+    leds[LEDS_NUM_MIDDLE + positionCounter] =  CRGB(0);
+    leds[LEDS_NUM_MIDDLE - positionCounter] =  CRGB(0);
+    positionCounter++;
+
+    if(positionCounter >= LEDS_NUM_MIDDLE - 1) {
+      positionCounter = 0;
+      globalState = INSLEEP;
+    }
+
+    FastLED.show();
+
+    slower = 0;
+  }
+}
+
 
 
 void changeBrightness(int _value) {
