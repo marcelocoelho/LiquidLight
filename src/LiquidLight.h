@@ -65,8 +65,8 @@ decode_results results;
 
 #define BRIGHT_MAX  160
 #define BRIGHT_MIN  0
-#define DOWN -5
-#define UP    5
+#define DOWN -4
+#define UP    4
 
 //#define BIGGER    1
 //#define SMALLER  -1

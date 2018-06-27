@@ -316,7 +316,7 @@ void playing() {
 
 
 
-void wakeup() {
+void wakeupCenter() {
 
   slower++;
 
@@ -338,10 +338,32 @@ void wakeup() {
 }
 
 
+void wakeup() {
+
+  slower++;
+
+  if (slower > 2) {
+
+    leds[positionCounter] =  CRGB(255);
+    positionCounter++;
+
+    if(positionCounter >= LEDS_NUM) {
+      positionCounter = 0;
+      globalState = ON;
+    }
+
+    FastLED.show();
+
+    slower = 0;
+  }
+}
 
 
 
-void sleep() {
+
+
+
+void sleepCenter() {
 
   slower++;
 
@@ -364,6 +386,27 @@ void sleep() {
   }
 }
 
+
+void sleep() {
+
+  slower++;
+
+  if (slower > 2) {
+
+
+    leds[LEDS_NUM - positionCounter] =  CRGB(0);
+    positionCounter++;
+
+    if(positionCounter > LEDS_NUM) {
+      positionCounter = 0;
+      globalState = INSLEEP;
+    }
+
+    FastLED.show();
+
+    slower = 0;
+  }
+}
 
 
 void changeBrightness(int _value) {
