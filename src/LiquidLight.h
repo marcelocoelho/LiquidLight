@@ -56,10 +56,6 @@ decode_results results;
 
 #define LEDS_DATA         5
 #define LEDS_CLOCK        4
-#define LEDS_BRIGHTNESS_1   80
-#define LEDS_BRIGHTNESS_2   130
-#define LEDS_BRIGHTNESS_3   200
-#define LEDS_BRIGHTNESS_4   255
 #define FRAMES_PER_SECOND 60
 
 
@@ -68,26 +64,16 @@ decode_results results;
 #define DOWN -5
 #define UP    5
 
-//#define BIGGER    1
-//#define SMALLER  -1
 
 //int leds_brightness = 100;
 //int eeprom_addr_brightness = 0x00; //0x00;
-#define BRIGHT_LEVEL_NUM  6
-int brightnessLevels[BRIGHT_LEVEL_NUM] = {0,20,50,80,100,160};
+#define BRIGHT_LEVEL_NUM  8
+int brightnessLevels[BRIGHT_LEVEL_NUM] = {20,40,60,80,100,120,140,160};
 int brightLevel = BRIGHT_LEVEL_NUM - 1;
 
 
 CRGB leds[LEDS_NUM];
 
-
-/*
-#define ADVANCE 1
-#define RETURN -1
-#define SCENEMAX 3
-
-int sceneNum = 0;
-*/
 
 
 // Debug LED

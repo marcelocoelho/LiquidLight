@@ -162,47 +162,54 @@ void getInput() {
   if (irrecv.decode(&results)) {
 
     unsigned long command; //stores the latest input command
+    byte appleCommand;
 
     command = results.value;
 
+
     //Serial.println(results.value, HEX);
     //Serial.println(results.value);
+    //Serial.println(results.value, HEX);
+    //Serial.println(command >> 9 & 0xFF);
+    //Serial.println(command >> 9 & 0b01111111);
 
-    switch (command) {
-      case 2011249228:  //CENTER
+    // explanation of what is going on here https://hifiduino.wordpress.com/apple-aluminum-remote/
+    appleCommand = command >> 9 & 0b01111111;
+
+    switch (appleCommand) {
+      case 29://2011249228:  //CENTER
         //Serial.println("center");
         inputCommand = CENTER;
       break;
 
-      case 2011254860: // TOP
+
+      case 40: // TOP
         //Serial.println("up");
         inputCommand = UP;
         break;
 
-      case 2011258956: // RIGHT
+      case 48: // RIGHT
         //Serial.println("right");
         inputCommand = RIGHT;
-        //changeBrightness(UP);
         break;
 
-      case 2011271244: // LEFT
+      case 72: // LEFT
         //Serial.println("left");
         inputCommand = LEFT;
-        //changeBrightness(DOWN);
         break;
 
-      case 2011246668: // BOTTOM
+      case 24: // BOTTOM
         //Serial.println("down");
         inputCommand = DOWN;
         break;
 
-      case 2011283532: // MENU
+      case 96: // MENU
         //Serial.println("menu");
         inputCommand = MENU;
         //globalState = PLAYING;
         break;
 
-      case 2011298380: // PLAY
+      case 125: // PLAY
         //Serial.println("play");
         inputCommand = PLAY;
         break;
@@ -414,45 +421,27 @@ void sleep() {
 
 void stepBrightness(int _value) {
 
-  brightLevel = brightLevel + _value;
+    //if(globalState != INSLEEP) {
 
-  if (brightLevel > BRIGHT_LEVEL_NUM - 1) {
-    brightLevel = BRIGHT_LEVEL_NUM - 1 ;
-  }
+      brightLevel = brightLevel + _value;
 
-  if (brightLevel < 0) {
-    brightLevel = 0;
-  }
+      if (brightLevel > BRIGHT_LEVEL_NUM - 1) {
+        brightLevel = BRIGHT_LEVEL_NUM - 1 ;
+      }
 
-  //leds_brightness = brightnessLevels[brightLevel];
+      if (brightLevel < 0) {
+        brightLevel = 0;
+      }
 
-  Serial.println(brightnessLevels[brightLevel]);
+      //leds_brightness = brightnessLevels[brightLevel];
 
-  FastLED.setBrightness( brightnessLevels[brightLevel] );     // display
-  FastLED.show();
+      //Serial.println(brightnessLevels[brightLevel]);
 
-}
-
-/*
-void changeBrightness(int _value) {
-
-  leds_brightness = leds_brightness + _value;     // set new value
-
-
-  if (leds_brightness >= BRIGHT_MAX)
-    leds_brightness = BRIGHT_MAX;
-
-  if (leds_brightness <= BRIGHT_MIN)
-    leds_brightness = BRIGHT_MIN;
-
-  Serial.println(leds_brightness);
-
-  FastLED.setBrightness( leds_brightness );     // display
-  FastLED.show();
+      FastLED.setBrightness( brightnessLevels[brightLevel] );     // display
+      FastLED.show();
+  //  }
 
 }
-*/
-
 
 
 
