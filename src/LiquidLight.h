@@ -63,16 +63,21 @@ decode_results results;
 #define FRAMES_PER_SECOND 60
 
 
-#define BRIGHT_MAX  160
+#define BRIGHT_MAX  180
 #define BRIGHT_MIN  0
-#define DOWN -4
-#define UP    4
+#define DOWN -5
+#define UP    5
 
 //#define BIGGER    1
 //#define SMALLER  -1
 
-int leds_brightness = 40;
+//int leds_brightness = 100;
 //int eeprom_addr_brightness = 0x00; //0x00;
+#define BRIGHT_LEVEL_NUM  6
+int brightnessLevels[BRIGHT_LEVEL_NUM] = {0,20,50,80,100,160};
+int brightLevel = BRIGHT_LEVEL_NUM - 1;
+
+
 CRGB leds[LEDS_NUM];
 
 

@@ -89,7 +89,7 @@ void displayStopFrameInterrupt()
 void initSerial() {
   Serial.begin(115200);
   //delay(3000);
-  debug("Liquid Light v1.0");
+  //debug("Liquid Light v1.0");
 }
 
 void initDebugLED()
@@ -128,7 +128,7 @@ void initLEDStrip()
   FastLED.addLeds<APA102, LEDS_DATA, LEDS_CLOCK, BGR>(leds, LEDS_NUM);
   //leds_brightness = EEPROM.read(eeprom_addr_brightness);
   //if (leds_brightness == 0x00) leds_brightness = LEDS_BRIGHTNESS_4;
-	FastLED.setBrightness( leds_brightness );
+	FastLED.setBrightness( brightnessLevels[brightLevel] );
 	LEDStripFullOff();
 }
 
@@ -170,40 +170,40 @@ void getInput() {
 
     switch (command) {
       case 2011249228:  //CENTER
-        Serial.println("center");
+        //Serial.println("center");
         inputCommand = CENTER;
       break;
 
       case 2011254860: // TOP
-        Serial.println("up");
+        //Serial.println("up");
         inputCommand = UP;
         break;
 
       case 2011258956: // RIGHT
-        Serial.println("right");
+        //Serial.println("right");
         inputCommand = RIGHT;
         //changeBrightness(UP);
         break;
 
       case 2011271244: // LEFT
-        Serial.println("left");
+        //Serial.println("left");
         inputCommand = LEFT;
         //changeBrightness(DOWN);
         break;
 
       case 2011246668: // BOTTOM
-        Serial.println("down");
+        //Serial.println("down");
         inputCommand = DOWN;
         break;
 
       case 2011283532: // MENU
-        Serial.println("menu");
+        //Serial.println("menu");
         inputCommand = MENU;
         //globalState = PLAYING;
         break;
 
       case 2011298380: // PLAY
-        Serial.println("play");
+        //Serial.println("play");
         inputCommand = PLAY;
         break;
 
@@ -234,12 +234,14 @@ void setDisplay() {
   /////////////////////////////////////////////////////
   if (inputCommand == UP) {
     inputCommand = CLEAR;
-    changeBrightness(UP);
+    //changeBrightness(UP);
+    stepBrightness(1);
   }
 
   if (inputCommand == DOWN) {
     inputCommand = CLEAR;
-    changeBrightness(DOWN);
+    //changeBrightness(DOWN);
+    stepBrightness(-1);
   }
 
 
@@ -369,7 +371,7 @@ void sleepCenter() {
 
   if (slower > 5) {
 
-    Serial.println(positionCounter);
+    //Serial.println(positionCounter);
 
     leds[positionCounter] =  CRGB(0);
     leds[LEDS_NUM - positionCounter] =  CRGB(0);
@@ -409,6 +411,29 @@ void sleep() {
 }
 
 
+
+void stepBrightness(int _value) {
+
+  brightLevel = brightLevel + _value;
+
+  if (brightLevel > BRIGHT_LEVEL_NUM - 1) {
+    brightLevel = BRIGHT_LEVEL_NUM - 1 ;
+  }
+
+  if (brightLevel < 0) {
+    brightLevel = 0;
+  }
+
+  //leds_brightness = brightnessLevels[brightLevel];
+
+  Serial.println(brightnessLevels[brightLevel]);
+
+  FastLED.setBrightness( brightnessLevels[brightLevel] );     // display
+  FastLED.show();
+
+}
+
+/*
 void changeBrightness(int _value) {
 
   leds_brightness = leds_brightness + _value;     // set new value
@@ -426,7 +451,7 @@ void changeBrightness(int _value) {
   FastLED.show();
 
 }
-
+*/
 
 
 
